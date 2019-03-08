@@ -1,0 +1,8 @@
+utterance,intent
+"Hi, I would like to schedule my interview on next Monday",schedule
+Please schedule my interview on 16/02/2019,schedule
+I dont think I will be able to make it on thursday next week. Please reschedule it on friday,reschedule
+"Sorry, I won't be able to give the interview as I have already accepted another offer",reject
+There has been a tragic incident in my family and thus I won't be able take the interview,reject
+I am very glad to receive your email. Let's schedule the interview tomorrow evening,schedule
+I am not available in any of the given time slots. Would you mind scheduling it on next week,reschedule
