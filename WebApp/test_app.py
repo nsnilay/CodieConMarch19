@@ -64,9 +64,13 @@ def predict():
         print(request_body["text"])
         dateframe = pd.DataFrame([request_body["text"]], columns=['utterance'])
         print(dateframe)
-        extract_dates(request_body["text"])
+        interview_dates = extract_dates(request_body["text"])
+        response_body = dict.fromkeys(["intent", "dates"])
+        response_body["dates"] = interview_dates
+        response_body["intent"] = "schedule"
+        print(interview_dates)
 
-    return "SUCCESS"
+    return json.dumps(response_body)
 
 def extract_dates(sentence):
     """
@@ -86,8 +90,11 @@ def date_wrapper(sentence):
     """
 
     list_of_dates = search_dates(sentence)
+    interview_dates = []
     for date in list_of_dates:
-        print(date[1])
+        interview_dates.append(date[1].strftime("%H:%M:%S.%f - %m %d %Y"))
+    print("Interview dates: ", interview_dates)
+    return interview_dates
 
 if __name__ == '__main__':
     print(("* Loading model and starting server..."

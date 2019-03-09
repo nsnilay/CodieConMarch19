@@ -4,7 +4,7 @@ from __future__ import absolute_import
 from flask import Flask, request
 
 import pandas as pd
-
+from dateparser.search import search_dates
 from ludwig import LudwigModel
 
 import json
@@ -64,12 +64,45 @@ def predict():
         print(dateframe)
 
         global ludwig_model
-        print(ludwig_model.predict(dateframe))
+        prediction = ludwig_model.predict(dateframe)
+        print(prediction)
+        interview_dates = None
+
+        response_body = dict.fromkeys(["intent", "dates"])
+        response_body["intent"] = prediction["intent_predictions"][0]
+
+        if prediction["intent_predictions"][0] == "schedule":
+            interview_dates = extract_dates(request_body["text"])
+            response_body["dates"] = interview_dates
+        else:
+            print("The candidate rejected the interview")
+        print(interview_dates)
+
+    return json.dumps(response_body)
 
 
+def extract_dates(sentence):
+    """
+    :param sentence: the sentence from which the dates have to be extracted
+    :return: the list of dates extracted
+    """
+    return date_wrapper(sentence)
 
-    return "SUCCESS"
 
+def date_wrapper(sentence):
+    """
+    @method is our own wrapper to do any preprocessing on the sentence before sending
+    it to python's dateparser library
+    :param sentence:
+    :return: the list of dates extracted
+    """
+
+    list_of_dates = search_dates(sentence)
+    interview_dates = []
+    for date in list_of_dates:
+        interview_dates.append(date[1].strftime("%H:%M:%S.%f - %m %d %Y"))
+    print("Interview dates: ", interview_dates)
+    return interview_dates
 
 
 def load_model():
