@@ -1,7 +1,7 @@
 from __future__ import print_function
 from __future__ import absolute_import
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
 
 import pandas as pd
 from dateparser.search import search_dates
@@ -51,10 +51,10 @@ def hello():
 
 
 
-@app.route("/predict", methods = ['GET'])
+@app.route("/predict", methods = ['POST'])
 def predict():
 
-    if request.method == 'GET':
+    if request.method == 'POST':
         data = request.data
         print(data)
         request_body = json.loads(data)
@@ -71,14 +71,17 @@ def predict():
         response_body = dict.fromkeys(["intent", "dates"])
         response_body["intent"] = prediction["intent_predictions"][0]
 
-        if prediction["intent_predictions"][0] == "schedule":
-            interview_dates = extract_dates(request_body["text"])
-            response_body["dates"] = interview_dates
-        else:
-            print("The candidate rejected the interview")
+        try:
+            if prediction["intent_predictions"][0] == "schedule":
+                interview_dates = extract_dates(request_body["text"])
+                response_body["dates"] = interview_dates
+            else:
+                print("The candidate rejected the interview")
+        except:
+            print("date parsing exception occurred")
         print(interview_dates)
 
-    return json.dumps(response_body)
+    return jsonify(response_body)
 
 
 def extract_dates(sentence):
@@ -86,6 +89,8 @@ def extract_dates(sentence):
     :param sentence: the sentence from which the dates have to be extracted
     :return: the list of dates extracted
     """
+    # sentence = sentence.replace("to", " ")
+    # sentence = sentence.replace("on", " ")
     return date_wrapper(sentence)
 
 
@@ -97,10 +102,12 @@ def date_wrapper(sentence):
     :return: the list of dates extracted
     """
 
-    list_of_dates = search_dates(sentence)
+    list_of_dates = search_dates(sentence, settings={"PREFER_DATES_FROM":"future"})
+    print("List of dates: ", list_of_dates)
     interview_dates = []
-    for date in list_of_dates:
-        interview_dates.append(date[1].strftime("%H:%M:%S.%f - %m %d %Y"))
+    if (list_of_dates != None):
+        for date in list_of_dates:
+            interview_dates.append(date[1].strftime("%Y-%m-%dT%H:%M:%S"))
     print("Interview dates: ", interview_dates)
     return interview_dates
 

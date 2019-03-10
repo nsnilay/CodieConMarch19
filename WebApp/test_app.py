@@ -1,7 +1,7 @@
 from __future__ import print_function
 from __future__ import absolute_import
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
 
 from dateparser.search import search_dates
 
@@ -53,10 +53,10 @@ def hello():
 
 
 
-@app.route("/predict", methods = ['GET'])
+@app.route("/predict", methods = ['POST'])
 def predict():
 
-    if request.method == 'GET':
+    if request.method == 'POST':
         data = request.data
         print(data)
         request_body = json.loads(data)
@@ -70,13 +70,15 @@ def predict():
         response_body["intent"] = "schedule"
         print(interview_dates)
 
-    return json.dumps(response_body)
+    return jsonify(response_body)
 
 def extract_dates(sentence):
     """
     :param sentence: the sentence from which the dates have to be extracted
     :return: the list of dates extracted
     """
+    # sentence = sentence.replace(" to ", " ")
+    # sentence = sentence.replace(" on ", " ")
     return date_wrapper(sentence)
 
 
@@ -89,14 +91,17 @@ def date_wrapper(sentence):
     :return: the list of dates extracted
     """
 
-    list_of_dates = search_dates(sentence)
+    list_of_dates = search_dates(sentence, settings={"PREFER_DATES_FROM":"future"})
+    print(list_of_dates)
     interview_dates = []
-    for date in list_of_dates:
-        interview_dates.append(date[1].strftime("%H:%M:%S.%f - %m %d %Y"))
-    print("Interview dates: ", interview_dates)
+    if (list_of_dates != None):
+        for date in list_of_dates:
+            interview_dates.append(date[1].strftime("%Y-%m-%dT%H:%M:%S"))
+        print("Interview dates: ", interview_dates)
+
     return interview_dates
 
 if __name__ == '__main__':
     print(("* Loading model and starting server..."
         "please wait until server has fully started"))
-    app.run(host='0.0.0.0', port=6969, debug=True, threaded=False)
+    app.run( port=6969, debug=True, threaded=False)

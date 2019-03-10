@@ -1,8 +1,26 @@
 utterance,intent
 "Hi, I would like to schedule my interview on next Monday",schedule
 Please schedule my interview on 16/02/2019,schedule
-I dont think I will be able to make it on thursday next week. Please reschedule it on friday,reschedule
+I dont think I will be able to make it on thursday next week. Please reschedule it on friday,schedule
 "Sorry, I won't be able to give the interview as I have already accepted another offer",reject
 There has been a tragic incident in my family and thus I won't be able take the interview,reject
-I am very glad to receive your email. Let's schedule the interview tomorrow evening,schedule
-I am not available in any of the given time slots. Would you mind scheduling it on next week,reschedule
+"I am very glad to receive your email. Let's schedule the interview tomorrow evening",schedule
+I am not available in any of the given time slots. Would you mind scheduling it on next week,schedule
+"Hi, I will be available on Monday and Tuesday at 3 pm",schedule
+I will be available anytime this week,schedule
+You can schedule my interview next year on 31 Jan 2020,schedule
+"I cannot give any interviews right now, skype will be preferred",reject
+"Hi, This is with regard to previous mail. I sent wrong date and time. My desired schedule will be Monday 2 am and Wednesday 9 pm",schedule
+"Don't schedule my interview",reject
+"Don't schedule my interview tomorrow morning",reject
+"Don't schedule my interview on Friday evening",reject
+I cannot give the interview,reject
+I already got a job,reject
+"I would very much like to schedule my interview on the following dates - 3rd March 2019 4 pm, 4th March 3pm",schedule
+"I would like to schedule my interview on the following dates - 3rd July 2019 4 pm, 12th June 3pm",schedule
+"I would like to schedule my interview on 12th March 2019 4 pm, 4th March 10pm",schedule
+"Can you schedule my interview on 2nd March 2 pm, 3rd March 10 am?", schedule
+"Can you schedule my interview Monday 2 pm, Tuesday 10 am?",schedule
+"Can you schedule my interview on 2nd June 2 pm, 3rd June 10 am?",schedule
+"Hi, please schedule my interview tomorrow 2 pm",schedule
+"Hi, please scheudle my interview tomorrow 10 am", schedule
